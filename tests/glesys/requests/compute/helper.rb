@@ -11,53 +11,10 @@ class Glesys
             'serverid' => String,
             'hostname' => String,
             'datacenter' => String,
-            'platform' => String,
+            'platform' => String
           }],
           'status' => {
-            'code' => String,
-            'text' => String
-          }
-        }
-
-        CREATE = {
-          'debug' => {
-            'input' => {
-              "rootpw"        => String,
-              "disksize"      => String,
-              "memorysize"    => String,
-              "datacenter"    => String,
-              "cpucores"      => String,
-              "transfer"      => String,
-              "template"      => String,
-              "description"   => String,
-              "hostname"      => String,
-              "platform"      => String
-            }
-          },
-          'server' => {
-            'serverid' => String,
-            'hostname' => String,
-            'iplist' => [{
-              'cost' => String,
-              'version' => String,
-              'ip' => String
-            }]
-          },
-          'status' => {
-            'code' => String,
-            'text' => String
-          }
-        }
-
-        DESTROY = {
-          'debug' => {
-            'input' => {
-              'serverid' => String,
-              'keepip'   => String,
-            }
-          },
-          'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           }
         }
@@ -65,7 +22,7 @@ class Glesys
         DETAILS = {
           'debug' => {
             'input' =>  {
-              'serverid'  =>  String
+              'serverid'  =>  Fog::Nullable::String
             }
           },
           'server' => {
@@ -74,28 +31,56 @@ class Glesys
               'amount'      =>  Float,
               'timeperiod'  => String,
               'currency'    => String
-            }, 
-            'serverid'    => String,
-            'datacenter'  => String,
-            'memory'      => String,
-            'cpucores'    => String,
-            'transfer'    => String,
-            'template'    => String,
-            'iplist'      =>  [{
-              'cost'    => String,
-              'version' => String,
-              'ip'      => String
+            },
+            'serverid'      => String,
+            'datacenter'    => String,
+            'memorysize'    => Integer,
+            'cpucores'      => Integer,
+            'transfer'      => Integer,
+            'templatename'  => String,
+            'iplist'        =>  [{
+              'cost'      => Integer,
+              'ipversion' => Fog::Nullable::Integer,
+              'ipaddress' => Fog::Nullable::String,
+              'currency'  => String
             }], 
             'description' => String,
             'hostname'    => String,
-            'disk'        => String,
+            'disksize'    => Integer,
             'platform'    => String
           },
           'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           }
         }
+
+        STOP = DETAILS.merge(
+          'debug' => {
+            'input' =>  {
+              'serverid'  => Fog::Nullable::String,
+              'type'      => String
+            }
+          }
+        )
+
+        CREATE = DETAILS.merge(
+          'debug' => {
+            'input' =>  {
+              'serverid'      => Fog::Nullable::String,
+              'hostname'      => String,
+              'rootpassword'  => String,
+              'datacenter'    => String,
+              'platform'      => String,
+              'templatename'  => String,
+              'disksize'      => String,
+              'memorysize'    => String,
+              'cpucores'      => String,
+              'transfer'      => String,
+              'description'   => String
+            }
+          }
+        )
 
         STATUS = {
           'debug' => {
@@ -104,43 +89,48 @@ class Glesys
             }
           },
           'server' => {
-            'memory'    => String,
-            'bandwidth' => {
-              'last30days'  => Integer,
-              'today'       => Integer,
-              'max'         => String
+            'memory'    => {
+              'usage' => Fog::Nullable::Integer,
+              'max'   => Fog::Nullable::Integer,
+              'unit'  => Fog::Nullable::String
             },
-            'cpu'     => String,
-            'disk'    => String,
-            'state'   => String
+            'transfer'  => {
+              'usage' => Fog::Nullable::Integer,
+              'max'   => Fog::Nullable::Integer,
+              'unit'  => Fog::Nullable::String
+            },
+            'disk'      => {
+              'usage' => Fog::Nullable::Integer,
+              'max'   => Fog::Nullable::Integer,
+              'unit'  => Fog::Nullable::String
+            },
+            'state'     => String,
+            'transfer'  => {
+              'usage' => Fog::Nullable::Integer,
+              'max'   => Fog::Nullable::Integer,
+              'unit'  => Fog::Nullable::String
+            },
+            'cpu'       => [],
+            'uptime'    => {
+              'current' => Fog::Nullable::Integer,
+              'unit'    => String
+            }
           },
           'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           }
        }
 
-        START = {
+        DESTROY = {
           'debug' => {
             'input' => {
-              'serverid' => String
+              'serverid' => String,
+              'keepip'   => String
             }
           },
           'status' => {
-            'code' => String,
-            'text' => String
-          }
-        }
-
-        STOP = {
-          'debug' => {
-            'input' => {
-              'serverid'  => String,
-              'type'      => String
-            }
-          },
-          'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           }
         }
@@ -154,19 +144,19 @@ class Glesys
           },
           'iplist' => [{
             'price' => {
-              'amount' => String,
-              'timeperiod' => String,
-              'currency' => String
+              'amount'      => String,
+              'timeperiod'  => String,
+              'currency'    => String
             },
-            'datacenter' => String,
-            'serverid' => Fog::Nullable::String,
-            'platform' => String,
-            'ip'       => String,
-            'version'  => String,
-            'PTR'      => String,
+            'datacenter'  => String,
+            'serverid'    => Fog::Nullable::String,
+            'platform'    => String,
+            'ip'          => String,
+            'version'     => String,
+            'PTR'         => String
           }],
           'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           }
         }
@@ -181,7 +171,7 @@ class Glesys
           },
           'iplist' => [],
           'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           },
           'ipinfo' => {
@@ -198,7 +188,7 @@ class Glesys
             }
           },
           'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           }
         }
@@ -212,22 +202,22 @@ class Glesys
           },
           'templates' =>  {
             'Xen' => [{
-              'name'          => String,
-              'os'            => String,
-              'min_mem_size'  => String,
-              'min_disk_size' => String,
-              'platform'      => String
+              'name'              => String,
+              'operatingsystem'   => String,
+              'minimummemorysize' => Integer,
+              'minimumdisksize'   => Integer,
+              'platform'          => String
             }],
             'OpenVZ' => [{
-              'name'          => String,
-              'os'            => String,
-              'min_mem_size'  => String,
-              'min_disk_size' => String,
-              'platform'      => String
+              'name'              => String,
+              'operatingsystem'   => String,
+              'minimummemorysize' => Integer,
+              'minimumdisksize'   => Integer,
+              'platform'          => String
             }]
           },
           'status' => {
-            'code' => String,
+            'code' => Integer,
             'text' => String
           }
         }
